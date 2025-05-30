@@ -44,3 +44,5 @@ colnames(datos_chico1) <- c("Provincia","Barrio","Integrantes en vivienda"
 #filtramos por CABA
 datos_reducido1 <-datos_chico1 %>%
   filter(Provincia == "CABA")
+
+"prubea_pusheo_1"
