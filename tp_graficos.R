@@ -3,12 +3,13 @@ install.packages("googledrive")
 install.packages("readxl")
 install.packages("tidyverse")
 install.packages("vctrs")
+install.packages("ggplot2")
 
 #Instalamos librerias
 library(googledrive)
 library(readxl)
 library(tidyverse)
-
+library(ggplot2)
 
 #https://docs.google.com/spreadsheets/d/1IRhvzOQkvuspQF3TAsBCI-68i8ya0_hy
 googledrive::drive_download(as_id("1IRhvzOQkvuspQF3TAsBCI-68i8ya0_hy"), overwrite = T)
@@ -45,4 +46,32 @@ colnames(datos_chico1) <- c("Provincia","Barrio","Integrantes en vivienda"
 datos_reducido1 <-datos_chico1 %>%
   filter(Provincia == "CABA")
 
-"prubea_pusheo_1"
+datos_reducido1 %>% group_by(`Tipo de acceso al agua`) %>%filter(`Tipo de acceso al agua` != "No sabe") %>% 
+  mutate(`Tipo de acceso al agua`=recode(`Tipo de acceso al agua`,
+                                         "A través de una conexión con medidor a la red pública" = "red con medidor",
+                                         "A través de un camión cisterna" = "camión cisterna",
+                                         "A través de una conexión sin medidor, es decir “informalmente”, sea a través de una conexión directa a la red pública o a través de una conexión indirecta a través de un vecinx “informalmente”"
+                                         = "informalmente",
+                                         "No poseo agua dentro de la vivienda y/o tengo que acarrear desde fuera del terreno en que se ubica mi vivienda" 
+                                         = "No posee"
+                                         ))%>%
+  ggplot() + 
+  
+  aes(x = `Tipo de acceso al agua`) + # Frecuencias absolutas
+  #aes(x = reorder(tiempo, tiempo, function(x) -length(x))) + # Ordenar según frecuencia
+  #aes(x = tiempo, y = ..count.. / sum(..count..)) + # Porcentajes
+  # aes(x = reorder(tiempo, tiempo, function(x) -length(x)), 
+  #		y = ..count.. / sum(..count..)) +  # Porcentajes ordenados según frecuencia
+  #scale_y_continuous(labels = scales::percent) +    # Eje para porcentajes
+  
+  geom_bar(width = 0.75,   # Ancho de barras
+           fill = '#CDAA7D',  # Color de relleno 
+           col = "black",  # Color de línea
+           alpha = 0.6) +  # Transparencia
+  
+  labs(y = "Frecuencia", x = "Tipo de acceso al agua") + # Nombres de ejes
+  
+  ggtitle(" Tipo de acceso al agua de Barrios populares de CABA, año 2022") +
+  
+  theme_classic() # Temas preconfigurados de R https://r-charts.com/ggplot2/themes/
+
