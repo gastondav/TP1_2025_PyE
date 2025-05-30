@@ -46,6 +46,9 @@ colnames(datos_chico1) <- c("Provincia","Barrio","Integrantes en vivienda"
 datos_reducido1 <-datos_chico1 %>%
   filter(Provincia == "CABA")
 
+
+#----------------------TIPO DE ACCESO AL AGUA TABLA------------------------------------------------
+
 datos_reducido1 %>% group_by(`Tipo de acceso al agua`) %>%filter(`Tipo de acceso al agua` != "No sabe") %>% 
   mutate(`Tipo de acceso al agua`=recode(`Tipo de acceso al agua`,
                                          "A través de una conexión con medidor a la red pública" = "red con medidor",
@@ -57,8 +60,8 @@ datos_reducido1 %>% group_by(`Tipo de acceso al agua`) %>%filter(`Tipo de acceso
                                          ))%>%
   ggplot() + 
   
-  aes(x = `Tipo de acceso al agua`) + # Frecuencias absolutas
-  #aes(x = reorder(tiempo, tiempo, function(x) -length(x))) + # Ordenar según frecuencia
+  #aes(x = `Tipo de acceso al agua`) + # Frecuencias absolutas
+  aes(x = reorder(`Tipo de acceso al agua`, `Tipo de acceso al agua`, function(x) -length(x))) + # Ordenar según frecuencia
   #aes(x = tiempo, y = ..count.. / sum(..count..)) + # Porcentajes
   # aes(x = reorder(tiempo, tiempo, function(x) -length(x)), 
   #		y = ..count.. / sum(..count..)) +  # Porcentajes ordenados según frecuencia
@@ -73,5 +76,35 @@ datos_reducido1 %>% group_by(`Tipo de acceso al agua`) %>%filter(`Tipo de acceso
   
   ggtitle(" Tipo de acceso al agua de Barrios populares de CABA, año 2022") +
   
-  theme_classic() # Temas preconfigurados de R https://r-charts.com/ggplot2/themes/
+  theme_classic()# Temas preconfigurados de R https://r-charts.com/ggplot2/themes/
 
+#-----------------------------------------------------------------------------------------------
+
+#----------------------CANT DE ABONOS MOVILES------------------------------------------------
+
+# Para ver cual es maximo valor de esa categoria
+max(datos_reducido1$`Cant abono datos moviles`, na.rm = TRUE)
+
+datos_reducido1 %>% group_by(`Cant abono datos moviles`) %>% 
+  ggplot() + 
+  
+  #aes(x = `Tipo de acceso al agua`) + # Frecuencias absolutas
+  aes(x = reorder(`Cant abono datos moviles`, `Cant abono datos moviles`, function(x) -length(x))) + # Ordenar según frecuencia
+  #aes(x = tiempo, y = ..count.. / sum(..count..)) + # Porcentajes
+  # aes(x = reorder(tiempo, tiempo, function(x) -length(x)), 
+  #		y = ..count.. / sum(..count..)) +  # Porcentajes ordenados según frecuencia
+  #scale_y_continuous(labels = scales::percent) +    # Eje para porcentajes
+  
+  geom_bar(width = 0.75,   # Ancho de barras
+           fill = '#CDAA7D',  # Color de relleno 
+           col = "black",  # Color de línea
+           alpha = 0.6) +  # Transparencia
+  
+  labs(y = "Frecuencia", x = "Cantidad de Abonos Moviles") + # Nombres de ejes
+  
+  ggtitle(" Cantidad de abonos moviles en Barrios populares de CABA, año 2022") +
+  
+  theme_classic()
+ 
+#La mediana 
+median(datos_reducido1$`Cant abono datos moviles`, na.rm = TRUE)
