@@ -110,7 +110,6 @@ datos_reducido1 %>% group_by(`Cant abono datos moviles`) %>%
 median(datos_reducido1$`Cant abono datos moviles`, na.rm = TRUE)
 
 #-----------------------------------------------------------------------------------------------
-
 #----------------------acceso a baño o letrina------------------------------------------------
 
 datos_reducido1 %>%
@@ -128,3 +127,8 @@ datos_reducido1 %>%
                                "#F28E2B",  # Naranja cálido y alegre
                                "#E15759"))+
   theme_void()
+
+
+
+
+
