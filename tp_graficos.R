@@ -57,14 +57,14 @@ datos_reducido1 %>% group_by(`Tipo de acceso al agua`) %>%filter(`Tipo de acceso
                                          = "informalmente",
                                          "No poseo agua dentro de la vivienda y/o tengo que acarrear desde fuera del terreno en que se ubica mi vivienda" 
                                          = "No posee"
-                                         ))%>%
+  ))%>%
   ggplot() + 
   
   #aes(x = `Tipo de acceso al agua`) + # Frecuencias absolutas
   #aes(x = reorder(`Tipo de acceso al agua`, `Tipo de acceso al agua`, function(x) -length(x))) + # Ordenar según frecuencia
   #aes(x = `Tipo de acceso al agua`, y = after_stat(count) / sum(after_stat(count))) + # Porcentajes
   aes(x = reorder(`Tipo de acceso al agua`, `Tipo de acceso al agua`, function(x) -length(x)), 
-  y = after_stat(count) / sum(after_stat(count))) +  # Porcentajes ordenados según frecuencia
+      y = after_stat(count) / sum(after_stat(count))) +  # Porcentajes ordenados según frecuencia
   scale_y_continuous(labels = scales::percent) +    # Eje para porcentajes
   
   geom_bar(width = 0.75,   # Ancho de barras
@@ -78,8 +78,6 @@ datos_reducido1 %>% group_by(`Tipo de acceso al agua`) %>%filter(`Tipo de acceso
   
   theme_classic()# Temas preconfigurados de R https://r-charts.com/ggplot2/themes/
 
-#-----------------------------------------------------------------------------------------------
-
 #----------------------CANT DE ABONOS MOVILES------------------------------------------------
 
 # Para ver cual es maximo valor de esa categoria
@@ -88,12 +86,12 @@ max(datos_reducido1$`Cant abono datos moviles`, na.rm = TRUE)
 datos_reducido1 %>% group_by(`Cant abono datos moviles`) %>% 
   ggplot() + 
   
-  aes(x = `Cant abono datos moviles`) + # Frecuencias absolutas
+  #aes(x = `Cant abono datos moviles`) + # Frecuencias absolutas
   #aes(x = reorder(`Cant abono datos moviles`, `Cant abono datos moviles`, function(x) -length(x))) + # Ordenar según frecuencia
-  #aes(x = tiempo, y = ..count.. / sum(..count..)) + # Porcentajes
+  aes(x = `Cant abono datos moviles`, y = ..count.. / sum(..count..)) + # Porcentajes
   # aes(x = reorder(tiempo, tiempo, function(x) -length(x)), 
   #		y = ..count.. / sum(..count..)) +  # Porcentajes ordenados según frecuencia
-  #scale_y_continuous(labels = scales::percent) +    # Eje para porcentajes
+  scale_y_continuous(labels = scales::percent) +    # Eje para porcentajes
   
   geom_bar(width = 0.75,   # Ancho de barras
            fill = '#CDAA7D',  # Color de relleno 
@@ -105,12 +103,12 @@ datos_reducido1 %>% group_by(`Cant abono datos moviles`) %>%
   ggtitle(" Cantidad de abonos moviles en Barrios populares de CABA, año 2022") +
   
   theme_classic()
- 
+
 #La mediana 
 median(datos_reducido1$`Cant abono datos moviles`, na.rm = TRUE)
 
-#-----------------------------------------------------------------------------------------------
-#----------------------acceso a baño o letrina------------------------------------------------
+
+#----------------------Acceso a baño o letrina------------------------------------------------
 
 datos_reducido1 %>%
   count(`Existencia de baño`) %>%
@@ -123,12 +121,43 @@ datos_reducido1 %>%
   geom_text(aes(label = etiqueta),
             position = position_stack(vjust = 0.5)) +
   ggtitle(" Acceso a baño o letrina en Barrios populares de CABA, año 2022") +
-  scale_fill_manual(values = c("#4E79A7",  # Azul fuerte y profesional
-                               "#F28E2B",  # Naranja cálido y alegre
-                               "#E15759"))+
+  scale_fill_manual(values = c("#FDBE85",  # Azul fuerte y profesional
+                               "#A6CEE3",  # Naranja cálido y alegre
+                               "#FB9A99"))+
   theme_void()
 
+#----------------------Tipo de calefaccion------------------------------------------------
 
+datos_reducido1 %>%
+  pivot_longer(cols = starts_with("Tipo calefaccion"),
+               names_to = "tipo_columna",
+               values_to = "tipo_calefaccion") %>%
+  filter(!is.na(tipo_calefaccion),
+         tipo_calefaccion != "No usa",
+         tipo_calefaccion != "No necesito calefaccionar mi vivienda en ninguna época del año") %>%
+  count(tipo_calefaccion) %>%
+  mutate(porcentaje = n / sum(n),
+         etiqueta = paste0(round(porcentaje * 100), "%")) %>%
+  ggplot(aes(x = reorder(tipo_calefaccion, porcentaje), y = porcentaje)) +
+  geom_col(fill = "#FDBE85", color = "black") +
+  coord_flip() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  labs(title = "Tipos de calefacción en Barrios populares de CABA, año 2022",
+       x = "Tipo de calefacción",
+       y = "Porcentaje") +
+  theme_minimal()
+
+#----------------------Costo alquier------------------------------------------------
+
+datos_reducido1 %>%
+ggplot() +
+  aes(x = `Costo del alquiler`,
+      y = after_stat(count) / sum(after_stat(count))) +
+  scale_y_continuous(labels = scales::percent)+
+  geom_histogram(fill = "lightgray", col = "black", 
+                 breaks = seq(4000, 30000, 4000)) +
+  scale_x_continuous(breaks = seq(4000, 30000, 4000)) +
+  labs(x = "Precio del alquiler (Pesos)", y = "freq")
 
 
 
