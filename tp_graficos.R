@@ -51,10 +51,10 @@ datos_reducido1 <-datos_chico1 %>%
 
 datos_reducido1 %>% group_by(`Tipo de acceso al agua`) %>%filter(`Tipo de acceso al agua` != "No sabe") %>% 
   mutate(`Tipo de acceso al agua`=recode(`Tipo de acceso al agua`,
-                                         "A través de una conexión con medidor a la red pública" = "red con medidor",
-                                         "A través de un camión cisterna" = "camión cisterna",
+                                         "A través de una conexión con medidor a la red pública" = "Red con medidor",
+                                         "A través de un camión cisterna" = "Camión cisterna",
                                          "A través de una conexión sin medidor, es decir “informalmente”, sea a través de una conexión directa a la red pública o a través de una conexión indirecta a través de un vecinx “informalmente”"
-                                         = "informalmente",
+                                         = "Informalmente",
                                          "No poseo agua dentro de la vivienda y/o tengo que acarrear desde fuera del terreno en que se ubica mi vivienda" 
                                          = "No posee"
   ))%>%
@@ -68,11 +68,11 @@ datos_reducido1 %>% group_by(`Tipo de acceso al agua`) %>%filter(`Tipo de acceso
   scale_y_continuous(labels = scales::percent) +    # Eje para porcentajes
   
   geom_bar(width = 0.75,   # Ancho de barras
-           fill = '#CDAA7D',  # Color de relleno 
+           fill = '#FDBE85',  # Color de relleno 
            col = "black",  # Color de línea
            alpha = 0.6) +  # Transparencia
   
-  labs(y = "Frecuencia", x = "Tipo de acceso al agua") + # Nombres de ejes
+  labs(y = "Porcentaje(%)", x = "Tipo de acceso al agua") + # Nombres de ejes
   
   ggtitle(" Tipo de acceso al agua de Barrios populares de CABA, año 2022") +
   
@@ -100,15 +100,15 @@ datos_reducido1 %>% group_by(`Cant abono datos moviles`) %>%
   scale_y_continuous(labels = scales::percent) +    # Eje para porcentajes
   
   geom_bar(width = 0.75,   # Ancho de barras
-           fill = '#CDAA7D',  # Color de relleno 
+           fill = '#FDBE85',  # Color de relleno 
            col = "black",  # Color de línea
            alpha = 0.6) +  # Transparencia
   
-  labs(y = "Frecuencia", x = "Cantidad de Abonos Moviles") + # Nombres de ejes
+  labs(y = "Porcentaje(%)", x = "Cantidad de abonos moviles") + # Nombres de ejes
   
   ggtitle("Cantidad de abonos moviles en Barrios populares de CABA, año 2022") +
   
-  theme_classic() + theme(
+  theme_minimal() + theme(
     plot.title = element_text(face = "bold", hjust = 0.5),
     axis.title.x = element_text(face = "bold"),
     axis.title.y = element_text(face = "bold")
@@ -156,7 +156,7 @@ datos_reducido1 %>%
   scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
   labs(title = "Tipos de calefacción en Barrios populares de CABA, año 2022",
        x = "Tipo de calefacción",
-       y = "Porcentaje") +
+       y = "Porcentaje(%)") +
   theme_minimal() + theme(
     plot.title = element_text(face = "bold", hjust = 0.5),
     axis.title.x = element_text(face = "bold"),
@@ -175,7 +175,7 @@ ggplot() +
   scale_x_continuous(breaks = seq(4000, 30000, 4000)) +
   labs(title = "Precio de los alquileres en Barrios populares de CABA, año 2022" , 
        x = "Precio del alquiler ($Pesos)", 
-       y = "Frecuencia")+ theme(
+       y = "Porcentaje(%)")+ theme(
          plot.title = element_text(face = "bold", hjust = 0.5),
          axis.title.x = element_text(face = "bold"),
          axis.title.y = element_text(face = "bold")
@@ -188,10 +188,10 @@ mean(datos_reducido1$`Costo del alquiler`, na.rm = TRUE)
 
 datos_reducido1 %>% 
   mutate(`Tipo conexio electrica` = recode(`Tipo conexio electrica`,
-                                           "Conexión a través de un medidor a la red eléctrica" = "con medidor",
-                                           "Conexión sin medidor a una red eléctrica (“informal”)" = "informal",
-                                           "No posee conexión a la red eléctrica en la vivienda" = "no posee",
-                                           "Conexión a través de un medidor comunitario a la red eléctrica" = "medidor\n comunitario")) %>%
+                                           "Conexión a través de un medidor a la red eléctrica" = "Con medidor",
+                                           "Conexión sin medidor a una red eléctrica (“informal”)" = "Informal",
+                                           "No posee conexión a la red eléctrica en la vivienda" = "No posee",
+                                           "Conexión a través de un medidor comunitario a la red eléctrica" = "Medidor\n comunitario")) %>%
   filter(`Tipo conexio electrica` != "no posee") %>%
   count(`Tipo conexio electrica`, `Frec de cortes electricos`) %>%
   group_by(`Tipo conexio electrica`) %>%
@@ -202,7 +202,7 @@ datos_reducido1 %>%
   scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
   labs(title = "Frecuencia de cortes eléctricos segun tipo de conexión en la red en Barrios populares de CABA, año 2022"
        ,x = "Tipo de conexión a la red", 
-       y = "Frecuencia", 
+       y = "Porcentaje(%)", 
        fill = "Frecuencia de cortes eléctricos") +
   theme_minimal() + theme(
     plot.title = element_text(face = "bold", hjust = 0.5),
@@ -246,6 +246,3 @@ ggplot(datos_reducido1) +
     axis.title.x = element_text(face = "bold"),
     axis.title.y = element_text(face = "bold")
   )
-
-
-
