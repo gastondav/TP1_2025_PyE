@@ -76,7 +76,13 @@ datos_reducido1 %>% group_by(`Tipo de acceso al agua`) %>%filter(`Tipo de acceso
   
   ggtitle(" Tipo de acceso al agua de Barrios populares de CABA, año 2022") +
   
-  theme_classic()# Temas preconfigurados de R https://r-charts.com/ggplot2/themes/
+  theme_classic() +
+  theme(
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    axis.title.x = element_text(face = "bold"),
+    axis.title.y = element_text(face = "bold")
+  )# Temas preconfigurados de R https://r-charts.com/ggplot2/themes/
+
 
 #----------------------CANT DE ABONOS MOVILES------------------------------------------------
 
@@ -100,9 +106,13 @@ datos_reducido1 %>% group_by(`Cant abono datos moviles`) %>%
   
   labs(y = "Frecuencia", x = "Cantidad de Abonos Moviles") + # Nombres de ejes
   
-  ggtitle(" Cantidad de abonos moviles en Barrios populares de CABA, año 2022") +
+  ggtitle("Cantidad de abonos moviles en Barrios populares de CABA, año 2022") +
   
-  theme_classic()
+  theme_classic() + theme(
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    axis.title.x = element_text(face = "bold"),
+    axis.title.y = element_text(face = "bold")
+  )
 
 #La mediana 
 median(datos_reducido1$`Cant abono datos moviles`, na.rm = TRUE)
@@ -124,7 +134,9 @@ datos_reducido1 %>%
   scale_fill_manual(values = c("#FDBE85",  # Azul fuerte y profesional
                                "#A6CEE3",  # Naranja cálido y alegre
                                "#FB9A99"))+
-  theme_void()
+  theme_void() + theme(
+    plot.title = element_text(face = "bold", hjust = 0.5),
+  )
 
 #----------------------Tipo de calefaccion------------------------------------------------
 
@@ -145,7 +157,11 @@ datos_reducido1 %>%
   labs(title = "Tipos de calefacción en Barrios populares de CABA, año 2022",
        x = "Tipo de calefacción",
        y = "Porcentaje") +
-  theme_minimal()
+  theme_minimal() + theme(
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    axis.title.x = element_text(face = "bold"),
+    axis.title.y = element_text(face = "bold")
+  )
 
 #----------------------Costo alquier------------------------------------------------
 
@@ -154,13 +170,21 @@ ggplot() +
   aes(x = `Costo del alquiler`,
       y = after_stat(count) / sum(after_stat(count))) +
   scale_y_continuous(labels = scales::percent)+
-  geom_histogram(fill = "lightgray", col = "black", 
+  geom_histogram(fill = "#FDBE85", col = "black", 
                  breaks = seq(4000, 30000, 4000)) +
   scale_x_continuous(breaks = seq(4000, 30000, 4000)) +
-  labs(x = "Precio del alquiler (Pesos)", y = "freq")
+  labs(title = "Precio de los alquileres en Barrios populares de CABA, año 2022" , 
+       x = "Precio del alquiler ($Pesos)", 
+       y = "Frecuencia")+ theme(
+         plot.title = element_text(face = "bold", hjust = 0.5),
+         axis.title.x = element_text(face = "bold"),
+         axis.title.y = element_text(face = "bold")
+       )
 
+#promedio
+mean(datos_reducido1$`Costo del alquiler`, na.rm = TRUE)
 
-#----------------------tipo de conexión a la red con la frecuencia de cortes eléctricos en verano------------------------------------------------
+#----------------------Tipo de conexión a la red con la frecuencia de cortes eléctricos en verano------------------------------------------------
 
 datos_reducido1 %>% 
   mutate(`Tipo conexio electrica` = recode(`Tipo conexio electrica`,
@@ -176,23 +200,37 @@ datos_reducido1 %>%
   aes(x = `Tipo conexio electrica`, y = prop, fill = `Frec de cortes electricos`) +
   geom_bar(stat = "identity", position = "dodge") +
   scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
-  labs(x = "Tipo de conexión a la red", 
-       y = "Porcentaje", 
+  labs(title = "Frecuencia de cortes eléctricos segun tipo de conexión en la red en Barrios populares de CABA, año 2022"
+       ,x = "Tipo de conexión a la red", 
+       y = "Frecuencia", 
        fill = "Frecuencia de cortes eléctricos") +
-  theme_minimal()
+  theme_minimal() + theme(
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    axis.title.x = element_text(face = "bold"),
+    axis.title.y = element_text(face = "bold")
+  )
 
 
 #----------------------Cantidad de integrantes en vivienda y posibilidad de tener un celular con acceso a internet------------------------------------------------
 
 ggplot(datos_reducido1) +
   aes(x = `Integrantes en vivienda`, y = `Celular con acceso a internet`) +
-  geom_boxplot(show.legend = F, fill = "lightblue") +
-  labs(x = "Cantidad integrantes en la vivienda", y = "posibilidad de acceder a internet") +
+  geom_boxplot(show.legend = F, fill = "#FDBE85") +
+  labs(x = "Cantidad integrantes en la vivienda", y = "Posibilidad de acceder a internet") +
   #coord_flip() +
   ggtitle("Cantidad de integrantes en vivienda y posibilidad de acceder a internet en Barrios populares de CABA, año 2022") +
-  theme_light()
+  theme_light() + theme(
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    axis.title.x = element_text(face = "bold"),
+    axis.title.y = element_text(face = "bold")
+  )
 
-#----------------------Cantidad de integrantes en la vivienda y Cantidad de ambientes que se usan como dormitorio. ------------------------------------------------
+  #mediana
+  datos_reducido1 %>%
+  group_by(`Celular con acceso a internet`) %>%
+  summarise(mediana_integrantes = median(`Integrantes en vivienda`, na.rm = TRUE))
+
+  #----------------------Cantidad de integrantes en la vivienda y Cantidad de ambientes que se usan como dormitorio. ------------------------------------------------
 
 ggplot(datos_reducido1) +
   aes(x = `Integrantes en vivienda`, y = `Ambientes que se usan como dormitorios`) +
@@ -203,6 +241,11 @@ ggplot(datos_reducido1) +
               color = "blue") + # Color de los puntos jitter
   labs(x = "Integrantes por vivienda", y = "Ambientes que se usan como dormitorio")+
   ggtitle("Relación entre integrantes en las viviendas y cantidad de dormitorios en Barrios populares de CABA, año 2022") +
-  theme_bw()
+  theme_bw() + theme(
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    axis.title.x = element_text(face = "bold"),
+    axis.title.y = element_text(face = "bold")
+  )
+
 
 
