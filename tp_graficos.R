@@ -160,4 +160,49 @@ ggplot() +
   labs(x = "Precio del alquiler (Pesos)", y = "freq")
 
 
+#----------------------tipo de conexión a la red con la frecuencia de cortes eléctricos en verano------------------------------------------------
+
+datos_reducido1 %>% 
+  mutate(`Tipo conexio electrica` = recode(`Tipo conexio electrica`,
+                                           "Conexión a través de un medidor a la red eléctrica" = "con medidor",
+                                           "Conexión sin medidor a una red eléctrica (“informal”)" = "informal",
+                                           "No posee conexión a la red eléctrica en la vivienda" = "no posee",
+                                           "Conexión a través de un medidor comunitario a la red eléctrica" = "medidor\n comunitario")) %>%
+  filter(`Tipo conexio electrica` != "no posee") %>%
+  count(`Tipo conexio electrica`, `Frec de cortes electricos`) %>%
+  group_by(`Tipo conexio electrica`) %>%
+  mutate(prop = n / sum(n)) %>%  # ⚠️ SIN multiplicar por 100
+  ggplot() +
+  aes(x = `Tipo conexio electrica`, y = prop, fill = `Frec de cortes electricos`) +
+  geom_bar(stat = "identity", position = "dodge") +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  labs(x = "Tipo de conexión a la red", 
+       y = "Porcentaje", 
+       fill = "Frecuencia de cortes eléctricos") +
+  theme_minimal()
+
+
+#----------------------Cantidad de integrantes en vivienda y posibilidad de tener un celular con acceso a internet------------------------------------------------
+
+ggplot(datos_reducido1) +
+  aes(x = `Integrantes en vivienda`, y = `Celular con acceso a internet`) +
+  geom_boxplot(show.legend = F, fill = "lightblue") +
+  labs(x = "Cantidad integrantes en la vivienda", y = "posibilidad de acceder a internet") +
+  #coord_flip() +
+  ggtitle("Cantidad de integrantes en vivienda y posibilidad de acceder a internet en Barrios populares de CABA, año 2022") +
+  theme_light()
+
+#----------------------Cantidad de integrantes en la vivienda y Cantidad de ambientes que se usan como dormitorio. ------------------------------------------------
+
+ggplot(datos_reducido1) +
+  aes(x = `Integrantes en vivienda`, y = `Ambientes que se usan como dormitorios`) +
+  geom_point() +
+  geom_jitter(width = 0.4, # Jitter horizontal
+              height = 0.4, # Jitter vertical
+              alpha = 0.4, # Transparencia
+              color = "blue") + # Color de los puntos jitter
+  labs(x = "Integrantes por vivienda", y = "Ambientes que se usan como dormitorio")+
+  ggtitle("Relación entre integrantes en las viviendas y cantidad de dormitorios en Barrios populares de CABA, año 2022") +
+  theme_bw()
+
 
